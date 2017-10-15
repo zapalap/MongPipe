@@ -18,24 +18,24 @@ pipeline
 Or something more complicated
 
 ```csharp
-	var pipeline = new Pipeline<string, IList<string>, IDictionary<string, int>>(new Dictionary<string, int>());
+var pipeline = new Pipeline<string, IList<string>, IDictionary<string, int>>(new Dictionary<string, int>());
 
-	pipeline
-		.Parse(() => new SimpleComaSplitParseFilter<IDictionary<string, int>>())
-		.Accept(m => m.Any(s => s.Contains("ERROR")))
-		.Aggregate((input, model, accumulator) =>
+pipeline
+	.Parse(() => new SimpleComaSplitParseFilter<IDictionary<string, int>>())
+	.Accept(m => m.Any(s => s.Contains("ERROR")))
+	.Aggregate((input, model, accumulator) =>
+	{
+		if (accumulator.ContainsKey(input))
 		{
-			if (accumulator.ContainsKey(input))
-			{
-				var count = accumulator[input];
-				count++;
-				accumulator[input] = count;
-				return accumulator;
-			}
+			var count = accumulator[input];
+			count++;
+			accumulator[input] = count;
+			return accumulator;
+		}
 
-			accumulator.Add(input, 1);
-			return acccumulator;
-		})
-		.HoldIf(s => !s.Any(v => v.Value > 3))
-		.Sink((input, model, accumulator) => EmailGateway.Send("alert@corp.com", "So many errors", $"The same error occured 3 times. {JsonConvert.SerializeObject(accumulator, Formatting.Indented)}"));
-```csharp
+		accumulator.Add(input, 1);
+		return acccumulator;
+	})
+	.HoldIf(s => !s.Any(v => v.Value > 3))
+	.Sink((input, model, accumulator) => EmailGateway.Send("alert@corp.com", "So many errors", $"The same error occured 3 times. {JsonConvert.SerializeObject(accumulator, Formatting.Indented)}"));
+```
