@@ -7,9 +7,9 @@ namespace MongPipe.Core.DSL.Interface
 {
     public class Pumpable<TInput, TModel, TAccumulator> : IPumpable<TInput, TModel, TAccumulator>
     {
-        public IPipeline<TInput, TModel, TAccumulator> Pipeline { get; }
+        public IPipe<TInput, TModel, TAccumulator> Pipeline { get; }
 
-        public Pumpable(IPipeline<TInput, TModel, TAccumulator> pipeline)
+        public Pumpable(IPipe<TInput, TModel, TAccumulator> pipeline)
         {
             Pipeline = pipeline;
         }

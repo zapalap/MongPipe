@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using MongPipe.Core.DSL;
 using MongPipe.Core.Filters;
+using MongPipe.Core.Factories;
 
 namespace MongPipe.CliDemo
 {
@@ -14,11 +15,11 @@ namespace MongPipe.CliDemo
     {
         static void Main(string[] args)
         {
-            var pipeline = new Pipeline<string, IList<string>, IDictionary<string, int>>(new Dictionary<string, int>());
+            var pipeline = new Pipe<string, IDictionary<string, string>, IDictionary<string, int>>(new Dictionary<string, int>());
 
             pipeline
-                .Parse(() => new SimpleComaSplitParseFilter<IDictionary<string, int>>())
-                .Accept(m => m.Any(s => s.Contains("ERROR")))
+                .Parse(() => GrokFilter<IDictionary<string,int>>.Create("%{USERNAME:user} %{WORD:loglevel} %{IPV4:ip} %{WORD:status}"))
+                .Accept(m => m["status"] == "500")
                 .Aggregate((input, model, soFar) =>
                 {
                     if (soFar.ContainsKey(input))
@@ -34,7 +35,6 @@ namespace MongPipe.CliDemo
                 })
                 .HoldIf(s => !s.Any(v => v.Value > 3))
                 .Sink((input, model, accumulator) => Console.WriteLine($"Error threshold reached. More than 3 errors happend. {JsonConvert.SerializeObject(accumulator, Formatting.Indented)}"));
-
 
             var command = "";
 

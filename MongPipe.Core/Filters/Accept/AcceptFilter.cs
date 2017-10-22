@@ -7,14 +7,14 @@ namespace MongPipe.Core.Filters
 {
     public class AcceptFilter<TInput, TModel, TAccumulator> : IPipeFilter<TInput, TModel, TAccumulator>
     {
-        private readonly Func<IPipelineContext<TInput, TModel, TAccumulator>, bool> Predicate;
+        private readonly Func<IPipeContext<TInput, TModel, TAccumulator>, bool> Predicate;
 
-        public AcceptFilter(Func<IPipelineContext<TInput, TModel, TAccumulator>, bool> predicate)
+        public AcceptFilter(Func<IPipeContext<TInput, TModel, TAccumulator>, bool> predicate)
         {
             Predicate = predicate;
         }
         
-        public void Apply(IPipelineContext<TInput, TModel, TAccumulator> message)
+        public void Apply(IPipeContext<TInput, TModel, TAccumulator> message)
         {
             var shouldAccept = Predicate.Invoke(message);
 

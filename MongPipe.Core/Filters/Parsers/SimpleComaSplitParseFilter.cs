@@ -12,7 +12,7 @@ namespace MongPipe.Core.Filters
 
         }
 
-        public void Apply(IPipelineContext<string, IList<string>, TAccumulator> message)
+        public void Apply(IPipeContext<string, IList<string>, TAccumulator> message)
         {
             message.Model = message.Input.Split(',');
             return;

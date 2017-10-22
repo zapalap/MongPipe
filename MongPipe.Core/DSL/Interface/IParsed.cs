@@ -7,6 +7,6 @@ namespace MongPipe.Core.DSL.Interface
 {
     public interface IParsed<TInput, TModel, TAccumulator>
     {
-        IPipeline<TInput, TModel, TAccumulator> Pipeline { get; }
+        IPipe<TInput, TModel, TAccumulator> Pipeline { get; }
     }
 }
