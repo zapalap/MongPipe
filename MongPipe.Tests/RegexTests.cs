@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
-using MongPipe.Core.Helpers.Regex;
+using MongPipe.Core.Helpers;
 
 namespace MongPipe.Tests
 {
@@ -9,62 +9,23 @@ namespace MongPipe.Tests
     public class RegexTests
     {
         [TestMethod]
-        public void RegexResolverProperlyResolvesOnePatternAtTheEndOfTheInput()
+        public void RegexMatchesCorrectly()
         {
             // Arrange
-            var patterns = new List<RegexAlias>()
-            {
-                new RegexAlias("%{WORD}", "(WORD)")
-            };
+            var patterns = HardcodedPatterns.Patterns;
 
-            var resolver = new RegexAliasResolver(patterns);
-            var input = "This is a word pattern: %{WORD}";
+            var resolver = new RegexPatternResolver(patterns);
+            var message = "testUser INFO 192.168.0.1 Internal Server Error";
+            var grok = "%{USERNAME:user} %{WORD:loglevel} %{IPV4:ip} %{GREEDYDATA:error}";
 
             // Act
-            var output = resolver.Reslove(input);
+            var output = resolver.Reslove(message, grok);
 
             // Assert 
-            Assert.AreEqual("This is a word pattern: (WORD)", output);
-        }
-
-        [TestMethod]
-        public void RegexResolverProperlyResolvesOnePatternAtTheStartOfTheInput()
-        {
-            // Arrange
-            var patterns = new List<RegexAlias>()
-            {
-                new RegexAlias("%{WORD}", "(WORD)")
-            };
-
-            var resolver = new RegexAliasResolver(patterns);
-            var input = "%{WORD} is a pattern";
-
-            // Act
-            var output = resolver.Reslove(input);
-
-            // Assert 
-            Assert.AreEqual("(WORD) is a pattern", output);
-        }
-
-        [TestMethod]
-        public void RegexResolverProperlyResolvesMultiplePatterns()
-        {
-            // Arrange
-            var patterns = new List<RegexAlias>()
-            {
-                new RegexAlias("%{WORD}", "(WORD)"),
-                new RegexAlias("%{LETTER}", "(LETTER)"),
-                new RegexAlias("%{IP}", "(IP)"),
-            };
-
-            var resolver = new RegexAliasResolver(patterns);
-            var input = "%{WORD} is a pattern, as is %{IP} and of course a %{LETTER}";
-
-            // Act
-            var output = resolver.Reslove(input);
-
-            // Assert 
-            Assert.AreEqual("(WORD) is a pattern, as is (IP) and of course a (LETTER)", output);
+            Assert.AreEqual("testUser", output["user"]);
+            Assert.AreEqual("INFO", output["loglevel"]);
+            Assert.AreEqual("192.168.0.1", output["ip"]);
+            Assert.AreEqual("Internal Server Error", output["error"]);
         }
     }
 }
