@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MongPipe.Core.Pipeline
 {
-    public class Pipeline<TInput, TModel, TAccumulator> : IPipeline<TInput, TModel, TAccumulator>
+    public class Pipe<TInput, TModel, TAccumulator> : IPipe<TInput, TModel, TAccumulator>
     {
         private TAccumulator AccumulatorState;
 
@@ -12,12 +12,12 @@ namespace MongPipe.Core.Pipeline
 
         private readonly IList<IPipeFilter<TInput, TModel, TAccumulator>> Filters = new List<IPipeFilter<TInput,TModel, TAccumulator>>();
 
-        public Pipeline(TAccumulator initialAccumulatorValue)
+        public Pipe(TAccumulator initialAccumulatorValue)
         {
             AccumulatorState = initialAccumulatorValue;
         }
 
-        public IPipeline<TInput,TModel, TAccumulator> Start()
+        public IPipe<TInput,TModel, TAccumulator> Start()
         {
             Started = true;
             return this;

@@ -9,18 +9,25 @@ namespace MongPipe.Core.Filters
 {
     public class SinkFilter<TInput, TModel, TAccumulator> : IPipeFilter<TInput, TModel, TAccumulator>
     {
-        readonly Action<IPipelineContext<TInput, TModel, TAccumulator>> SinkAction;
+        readonly Action<IPipeContext<TInput, TModel, TAccumulator>> SinkAction;
 
-        public SinkFilter(Action<IPipelineContext<TInput, TModel, TAccumulator>> sinkAction)
+        public SinkFilter(Action<IPipeContext<TInput, TModel, TAccumulator>> sinkAction)
         {
             SinkAction = sinkAction;
         }
 
-        public void Apply(IPipelineContext<TInput, TModel, TAccumulator> message)
+        public void Apply(IPipeContext<TInput, TModel, TAccumulator> message)
         {
             SinkAction.Invoke(message);
 
-            message.Accumulator = default(TAccumulator);
+            if (message.Accumulator.GetType().GetTypeInfo().IsValueType)
+            {
+                message.Accumulator = default(TAccumulator);
+            }
+             else
+            {
+                message.Accumulator = (TAccumulator)Activator.CreateInstance(message.Accumulator.GetType());
+            }
         }
     }
 }

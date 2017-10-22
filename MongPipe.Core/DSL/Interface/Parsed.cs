@@ -7,9 +7,9 @@ namespace MongPipe.Core.DSL.Interface
 {
     public class Parsed<TInput, TModel, TAccumulator> : IParsed<TInput, TModel, TAccumulator>
     {
-        public IPipeline<TInput, TModel, TAccumulator> Pipeline { get; }
+        public IPipe<TInput, TModel, TAccumulator> Pipeline { get; }
 
-        public Parsed(IPipeline<TInput, TModel, TAccumulator> pipeline)
+        public Parsed(IPipe<TInput, TModel, TAccumulator> pipeline)
         {
             Pipeline = pipeline;
         }

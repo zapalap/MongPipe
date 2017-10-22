@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MongPipe.Core.Pipeline
 {
-    public interface IPipelineContext<TInput, TModel,  TAccumulator>
+    public interface IPipeContext<TInput, TModel,  TAccumulator>
     {
         TInput Input { get; set; }
         TModel Model { get; set; }

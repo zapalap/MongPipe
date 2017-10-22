@@ -6,6 +6,6 @@ namespace MongPipe.Core.Pipeline
 {
     public interface IPipeFilter<TInput, TModel, TAccumulator>
     {
-        void Apply(IPipelineContext<TInput, TModel, TAccumulator> message);
+        void Apply(IPipeContext<TInput, TModel, TAccumulator> message);
     }
 }

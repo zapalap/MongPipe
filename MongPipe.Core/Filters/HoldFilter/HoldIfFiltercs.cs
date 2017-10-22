@@ -14,7 +14,7 @@ namespace MongPipe.Core.Filters
             Predicate = predicate;
         }
         
-        public void Apply(IPipelineContext<TInput, TModel, TAccumulator> message)
+        public void Apply(IPipeContext<TInput, TModel, TAccumulator> message)
         {
             if (Predicate.Invoke(message.Accumulator))
             {
