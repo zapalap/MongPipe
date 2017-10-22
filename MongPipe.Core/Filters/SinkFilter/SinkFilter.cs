@@ -20,7 +20,14 @@ namespace MongPipe.Core.Filters
         {
             SinkAction.Invoke(message);
 
-            message.Accumulator = default(TAccumulator);
+            if (message.Accumulator.GetType().GetTypeInfo().IsValueType)
+            {
+                message.Accumulator = default(TAccumulator);
+            }
+             else
+            {
+                message.Accumulator = (TAccumulator)Activator.CreateInstance(message.Accumulator.GetType());
+            }
         }
     }
 }

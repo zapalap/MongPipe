@@ -18,8 +18,8 @@ namespace MongPipe.CliDemo
             var pipeline = new Pipe<string, IDictionary<string, string>, IDictionary<string, int>>(new Dictionary<string, int>());
 
             pipeline
-                .Parse(() => GrokFilter<IDictionary<string,int>>.Create("%{USERNAME:user} %{WORD:loglevel} %{IPV4:ip} %{WORD:status}"))
-                .Accept(m => m["status"] == "500")
+                .Parse(() => GrokFilter<IDictionary<string,int>>.Create("%{USERNAME:user} %{WORD:loglevel}"))
+                .Accept(m => m["loglevel"] == "ERROR")
                 .Aggregate((input, model, soFar) =>
                 {
                     if (soFar.ContainsKey(input))
